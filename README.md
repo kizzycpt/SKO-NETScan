@@ -1,6 +1,7 @@
 # Sko_NetScan 🔍
 
-Created By Samuel Quarm
+Created By Samuel Quarm. 
+
 A fast, multi-threaded network scanner built in Python. It identifies devices on your local network, scans for open ports with protocol labels, performs OS fingerprinting via Nmap, and summarizes the results — all while saving logs to an organized folder.
 
 ---
