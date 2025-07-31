@@ -1,4 +1,4 @@
-# Sko_NetScan 🔍
+# SKO_NetScan 🔍
 
 Created By Samuel Quarm. 
 
