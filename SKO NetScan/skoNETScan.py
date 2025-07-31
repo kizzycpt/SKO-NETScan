@@ -26,7 +26,7 @@ from threading import Lock
 # === Config === #
 DEFAULT_SUBNET = "192.168.1.0/24"
 DEFAULT_PORTS = [21, 22, 23, 25, 80, 135, 139, 443, 445, 3389]
-LOG_DIR = Path("Sko NetScan/logs")
+LOG_DIR = Path("logs")
 LOG_FILE = LOG_DIR / "scan_log.txt"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 PORT_PROTOCOLS = {
