@@ -15,10 +15,13 @@ import nmap
 import argparse
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
+from rich.console import Console
 from collections import Counter
 from threading import Lock
 
 
+#console (colors)
+console = Console()
 
 
 # [!] File Path details[!] <--------------------- CHANGE THE FILE PATH TO SAVE THE ENTIRE SCAN TO A CREATED LOG!!!!!!!!!!!!
@@ -26,7 +29,7 @@ from threading import Lock
 # === Config === #
 DEFAULT_SUBNET = "192.168.1.0/24"
 DEFAULT_PORTS = [21, 22, 23, 25, 80, 135, 139, 443, 445, 3389]
-LOG_DIR = Path("logs")
+LOG_DIR = Path("SKO NetScan/logs")
 LOG_FILE = LOG_DIR / "scan_log.txt"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 PORT_PROTOCOLS = {
@@ -35,6 +38,8 @@ PORT_PROTOCOLS = {
     23: "Telnet",
     25: "SMTP",
     53: "DNS",
+    67: "DHCP Server",
+    68: "DHCP Client",
     80: "HTTP",
     110: "POP3",
     135: "RPC",
@@ -42,10 +47,14 @@ PORT_PROTOCOLS = {
     143: "IMAP",
     443: "HTTPS",
     445: "SMB",
+    5060: "SIP",
+    5900: "VNC",
     993: "IMAPS",
     995: "POP3S",
     3306: "MySQL",
     3389: "RDP",
+    5353: "mDNS (Bonjour)",
+    8080: "HTTP Alternate",
 }
 
 def get_network_info():
@@ -66,7 +75,7 @@ def get_network_info():
             'public_ip': public_ip
         }
     except Exception as e:
-        print(f"[!] Failed to get network info: {e}")
+        console.print(f"[red][!] Failed to get network info: {e}")
         return {}
 
 def scan_arp(subnet):
@@ -78,7 +87,7 @@ def scan_arp(subnet):
 
     hosts = {}
     for _, received in result:
-        print(f"[+] Host found: {received.psrc} - MAC: {received.hwsrc}")
+        console.print(f"[green][+] Host found: [yellow]{received.psrc} - MAC: {received.hwsrc}")
         hosts[received.psrc] = received.hwsrc
     return hosts
 
@@ -98,9 +107,9 @@ def os_scan(target_ip):
             else:
                 output += "[!] OS detection failed.\n"
         else:
-            output += "[!] Host is down or not responding.\n"
+            output += "[orange][!] Host is down or not responding.\n"
     except Exception as e:
-        output += f"[!] OS scan error: {e}\n"
+        output += f"[red][!] OS scan error: {e}\n"
 
     return output
 
