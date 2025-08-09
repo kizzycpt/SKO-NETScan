@@ -79,13 +79,16 @@ def get_network_info():
         return {}
 
 def scan_arp(subnet):
+    
     """Send ARP requests and return discovered hosts."""
+    
     arp = ARP(pdst=subnet)
     ether = Ether(dst='ff:ff:ff:ff:ff:ff')
     packet = ether / arp
     result = srp(packet, timeout=2, verbose=0)[0]
 
     hosts = {}
+    
     for _, received in result:
         console.print(f"[green][+] Host found: [yellow]{received.psrc} - MAC: {received.hwsrc}")
         hosts[received.psrc] = received.hwsrc
@@ -152,10 +155,10 @@ def main():
     with open(LOG_FILE, 'a') as f:
         f.write(f'\n\n=== Scan Started: {datetime.now()} ===\n')
 
-    print("[*] Starting ARP Scan...")
+    console.print("[green][*] Starting ARP Scan...")
     hosts = scan_arp(args.subnet)
 
-    print("[*] Starting full scan on discovered hosts...")
+    cosnsole.print("[bright_green][*] Starting full scan on discovered hosts...")
     with ThreadPoolExecutor(max_workers=10) as executor:
         for host, mac in hosts.items():
             executor.submit(full_host_scan, host, mac, net_info)
@@ -181,3 +184,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
